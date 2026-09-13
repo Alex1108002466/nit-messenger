@@ -1,0 +1,37 @@
+# =========================
+# Flutter
+# =========================
+
+messenger_app/.dart_tool/
+messenger_app/build/
+messenger_app/.idea/
+messenger_app/.flutter-plugins
+messenger_app/.flutter-plugins-dependencies
+messenger_app/.metadata
+messenger_app/*.iml
+
+
+# =========================
+# Node.js Backend
+# =========================
+
+messenger_backend/node_modules/
+messenger_backend/uploads/
+
+
+# =========================
+# Environment / Secrets
+# =========================
+
+messenger_backend/.env
+.env
+
+
+# =========================
+# Logs
+# =========================
+
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
