@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  static const String baseUrl = 'http://192.168.0.147:3000';
+  static const String baseUrl = 'https://nit-messenger.duckdns.org';
 
   static Future<Map<String, dynamic>> register({
     required String name,

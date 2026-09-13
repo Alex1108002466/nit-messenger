@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return ListTile(
                       leading: CircleAvatar(
                         backgroundImage: otherUser['avatarUrl'] != null
-                            ? NetworkImage('http://192.168.0.147:3000${otherUser['avatarUrl']}')
+                            ? NetworkImage('https://nit-messenger.duckdns.org${otherUser['avatarUrl']}')
                             : null,
                         child: otherUser['avatarUrl'] == null
                             ? Text(otherUser['name'][0].toUpperCase())

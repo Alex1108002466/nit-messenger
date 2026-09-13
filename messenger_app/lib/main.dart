@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeService>(
         builder: (context, themeService, child) {
           return MaterialApp(
-            title: 'Мессенджер',
+            title: 'Nit - Мессенджер',
             debugShowCheckedModeBanner: false,
             themeMode: themeService.themeMode,
             theme: ThemeData(

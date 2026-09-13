@@ -17,7 +17,7 @@ class SocketService {
     if (_socket != null) return;
 
     _socket = IO.io(
-      'http://192.168.0.147:3000',
+      'https://nit-messenger.duckdns.org',
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .disableAutoConnect()

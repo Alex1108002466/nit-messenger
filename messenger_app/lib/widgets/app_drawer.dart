@@ -6,6 +6,7 @@ import '../services/user_service.dart';
 import '../screens/welcome_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/settings_screen.dart';
+import '../screens/games/games_screen.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
@@ -99,7 +100,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   CircleAvatar(
                     radius: 28,
                     backgroundImage: _userData != null && _userData!['avatarUrl'] != null
-                        ? NetworkImage('http://192.168.0.147:3000${_userData!['avatarUrl']}')
+                        ? NetworkImage('https://nit-messenger.duckdns.org${_userData!['avatarUrl']}')
                         : null,
                     child: _userData == null || _userData!['avatarUrl'] == null
                         ? Text(
@@ -144,6 +145,17 @@ class _AppDrawerState extends State<AppDrawer> {
             leading: const Icon(Icons.person_outline),
             title: const Text('Профиль'),
             onTap: () => _openProfile(context),
+          ),
+          ListTile(
+            leading: const Icon(Icons.sports_esports_outlined),
+            title: const Text('Игры'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const GamesScreen()),
+              );
+            },
           ),
           ListTile(
             leading: const Icon(Icons.settings_outlined),

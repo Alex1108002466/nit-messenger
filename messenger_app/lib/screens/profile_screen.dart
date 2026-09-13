@@ -149,7 +149,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 MaterialPageRoute(
                                   builder: (context) => FullScreenImage(
                                     imageUrl:
-                                        'http://192.168.0.147:3000${_userData!['avatarUrl']}',
+                                        'https://nit-messenger.duckdns.org${_userData!['avatarUrl']}',
                                   ),
                                 ),
                               );
@@ -158,7 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               radius: 50,
                               backgroundImage: _userData!['avatarUrl'] != null
                                   ? NetworkImage(
-                                      'http://192.168.0.147:3000${_userData!['avatarUrl']}',
+                                      'https://nit-messenger.duckdns.org${_userData!['avatarUrl']}',
                                     )
                                   : null,
                               child: _userData!['avatarUrl'] == null

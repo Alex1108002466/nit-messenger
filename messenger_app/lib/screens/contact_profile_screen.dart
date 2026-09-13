@@ -39,7 +39,7 @@ class _ContactProfileScreenState extends State<ContactProfileScreen> {
   void _openFullAvatar() {
     if (_userData!['avatarUrl'] == null) return;
 
-    final fullUrl = 'http://192.168.0.147:3000${_userData!['avatarUrl']}';
+    final fullUrl = 'https://nit-messenger.duckdns.org${_userData!['avatarUrl']}';
 
     Navigator.push(
       context,
@@ -69,7 +69,7 @@ class _ContactProfileScreenState extends State<ContactProfileScreen> {
                           radius: 60,
                           backgroundImage: _userData!['avatarUrl'] != null
                               ? NetworkImage(
-                                  'http://192.168.0.147:3000${_userData!['avatarUrl']}',
+                                  'https://nit-messenger.duckdns.org${_userData!['avatarUrl']}',
                                 )
                               : null,
                           child: _userData!['avatarUrl'] == null
