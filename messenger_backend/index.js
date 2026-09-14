@@ -8,11 +8,10 @@ const authMiddleware = require('./authMiddleware');
 const multer = require('multer');
 const path = require('path');
 const userConnections = new Map();
-
+const nodemailer = require('nodemailer');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-
 const prisma = new PrismaClient();
 const PORT = 3000;
 
@@ -48,6 +47,18 @@ const upload = multer({
   },
 });
 
+const emailTransporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
+
+function generateVerificationCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
 // Настройка multer для файлов чата (фото и документы)
 const chatFileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -68,18 +79,46 @@ app.get('/', (req, res) => {
   res.send('Привет! Сервер мессенджера работает.');
 });
 
-// Проверка валидности username: 5-32 символа, латиница/цифры/подчёркивание, не начинается с цифры
+
 function isValidUsername(username) {
   const regex = /^[a-zA-Z_][a-zA-Z0-9_]{4,31}$/;
   return regex.test(username);
 }
 
-app.post('/register', async (req, res) => {
+const allowedEmailDomains = [
+  'gmail.com',
+  'mail.ru',
+  'yandex.ru',
+  'yandex.com',
+  'outlook.com',
+  'hotmail.com',
+  'icloud.com',
+  'yahoo.com',
+  'bk.ru',
+  'inbox.ru',
+  'list.ru',
+  'rambler.ru',
+  'protonmail.com',
+];
+
+function isAllowedEmailDomain(email) {
+  const domain = email.split('@')[1]?.toLowerCase();
+  return allowedEmailDomains.includes(domain);
+}
+
+// Этап 1: запрос регистрации - проверка данных и отправка кода на email
+app.post('/register/request', async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
 
     if (!name || !username || !email || !password) {
       return res.status(400).json({ error: 'Заполните все поля' });
+    }
+
+    if (!isAllowedEmailDomain(email)) {
+      return res.status(400).json({
+        error: 'Используйте существующий домен',
+      });
     }
 
     if (!isValidUsername(username)) {
@@ -90,28 +129,74 @@ app.post('/register', async (req, res) => {
 
     const usernameLower = username.toLowerCase();
 
-    // Проверяем, не занят ли username
     const existingUsername = await prisma.user.findUnique({ where: { username: usernameLower } });
     if (existingUsername) {
       return res.status(400).json({ error: 'Этот никнейм уже занят' });
     }
 
-    // Проверяем, не занят ли email
     const existingEmail = await prisma.user.findUnique({ where: { email } });
     if (existingEmail) {
       return res.status(400).json({ error: 'Этот email уже зарегистрирован' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const code = generateVerificationCode();
 
-    const user = await prisma.user.create({
+    // Удаляем предыдущую незавершённую попытку регистрации с этим email, если была
+    await prisma.pendingRegistration.deleteMany({ where: { email } });
+
+    await prisma.pendingRegistration.create({
       data: {
         name,
         username: usernameLower,
         email,
         password: hashedPassword,
+        code,
       },
     });
+
+    await emailTransporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Код подтверждения NIT',
+      text: `Ваш код подтверждения: ${code}\n\nЕсли вы не запрашивали регистрацию, просто проигнорируйте это письмо.`,
+    });
+
+    res.json({ success: true, message: 'Код отправлен на почту' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
+app.post('/register/verify', async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    if (!email || !code) {
+      return res.status(400).json({ error: 'Заполните все поля' });
+    }
+
+    const pending = await prisma.pendingRegistration.findUnique({ where: { email } });
+
+    if (!pending) {
+      return res.status(400).json({ error: 'Запрос на регистрацию не найден. Попробуйте снова' });
+    }
+
+    if (pending.code !== code) {
+      return res.status(400).json({ error: 'Неверный код' });
+    }
+
+    const user = await prisma.user.create({
+      data: {
+        name: pending.name,
+        username: pending.username,
+        email: pending.email,
+        password: pending.password,
+      },
+    });
+
+    await prisma.pendingRegistration.delete({ where: { email } });
 
     res.status(201).json({
       id: user.id,

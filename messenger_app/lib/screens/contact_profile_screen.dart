@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../config.dart';
 import '../services/user_service.dart';
 
 import 'full_screen_image.dart';
@@ -39,7 +40,7 @@ class _ContactProfileScreenState extends State<ContactProfileScreen> {
   void _openFullAvatar() {
     if (_userData!['avatarUrl'] == null) return;
 
-    final fullUrl = 'https://nit-messenger.duckdns.org${_userData!['avatarUrl']}';
+    final fullUrl = '${Config.baseUrl}${_userData!['avatarUrl']}';
 
     Navigator.push(
       context,
@@ -69,7 +70,7 @@ class _ContactProfileScreenState extends State<ContactProfileScreen> {
                           radius: 60,
                           backgroundImage: _userData!['avatarUrl'] != null
                               ? NetworkImage(
-                                  'https://nit-messenger.duckdns.org${_userData!['avatarUrl']}',
+                                  '${Config.baseUrl}${_userData!['avatarUrl']}',
                                 )
                               : null,
                           child: _userData!['avatarUrl'] == null

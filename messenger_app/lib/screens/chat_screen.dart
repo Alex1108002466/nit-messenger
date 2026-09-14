@@ -8,6 +8,7 @@ import 'package:open_filex/open_filex.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../config.dart';
 import '../services/chat_service.dart';
 import '../services/storage_service.dart';
 import '../services/socket_service.dart';
@@ -558,7 +559,7 @@ class _ChatScreenState extends State<ChatScreen> {
               CircleAvatar(
                 radius: 18,
                 backgroundImage: widget.otherUserAvatarUrl != null
-                    ? NetworkImage('https://nit-messenger.duckdns.org${widget.otherUserAvatarUrl}')
+                    ? NetworkImage('${Config.baseUrl}${widget.otherUserAvatarUrl}')
                     : null,
                 child: widget.otherUserAvatarUrl == null
                     ? Text(widget.otherUserName[0].toUpperCase(), style: const TextStyle(fontSize: 14))
@@ -776,7 +777,7 @@ class _MessageBubble extends StatelessWidget {
 
     if (type == 'image') {
       final fileUrl = message['fileUrl'];
-      final fullUrl = 'https://nit-messenger.duckdns.org$fileUrl';
+      final fullUrl = '${Config.baseUrl}$fileUrl';
       final caption = message['text'];
 
       return Column(
@@ -824,7 +825,7 @@ class _MessageBubble extends StatelessWidget {
     if (type == 'file') {
       final fileName = message['fileName'] ?? 'Файл';
       final fileUrl = message['fileUrl'];
-      final fullUrl = 'https://nit-messenger.duckdns.org$fileUrl';
+      final fullUrl = '${Config.baseUrl}$fileUrl';
       final caption = message['text'];
 
       return Column(

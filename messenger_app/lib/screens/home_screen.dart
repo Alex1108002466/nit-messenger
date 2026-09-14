@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../config.dart';
 import '../services/storage_service.dart';
 import '../services/chat_service.dart';
 import '../services/socket_service.dart';
@@ -109,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return ListTile(
                       leading: CircleAvatar(
                         backgroundImage: otherUser['avatarUrl'] != null
-                            ? NetworkImage('https://nit-messenger.duckdns.org${otherUser['avatarUrl']}')
+                            ? NetworkImage('${Config.baseUrl}${otherUser['avatarUrl']}')
                             : null,
                         child: otherUser['avatarUrl'] == null
                             ? Text(otherUser['name'][0].toUpperCase())

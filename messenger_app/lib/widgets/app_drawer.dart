@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../config.dart';
 import '../services/storage_service.dart';
 import '../services/socket_service.dart';
 import '../services/user_service.dart';
@@ -100,7 +101,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   CircleAvatar(
                     radius: 28,
                     backgroundImage: _userData != null && _userData!['avatarUrl'] != null
-                        ? NetworkImage('https://nit-messenger.duckdns.org${_userData!['avatarUrl']}')
+                        ? NetworkImage('${Config.baseUrl}${_userData!['avatarUrl']}')
                         : null,
                     child: _userData == null || _userData!['avatarUrl'] == null
                         ? Text(

@@ -1,5 +1,7 @@
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../config.dart';
+
 import 'storage_service.dart';
 
 class SocketService {
@@ -17,7 +19,7 @@ class SocketService {
     if (_socket != null) return;
 
     _socket = IO.io(
-      'https://nit-messenger.duckdns.org',
+      '${Config.baseUrl}',
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .disableAutoConnect()

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../config.dart';
 import '../services/user_service.dart';
 
 import 'full_screen_image.dart';
@@ -149,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 MaterialPageRoute(
                                   builder: (context) => FullScreenImage(
                                     imageUrl:
-                                        'https://nit-messenger.duckdns.org${_userData!['avatarUrl']}',
+                                        '${Config.baseUrl}${_userData!['avatarUrl']}',
                                   ),
                                 ),
                               );
@@ -158,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               radius: 50,
                               backgroundImage: _userData!['avatarUrl'] != null
                                   ? NetworkImage(
-                                      'https://nit-messenger.duckdns.org${_userData!['avatarUrl']}',
+                                      '${Config.baseUrl}${_userData!['avatarUrl']}',
                                     )
                                   : null,
                               child: _userData!['avatarUrl'] == null

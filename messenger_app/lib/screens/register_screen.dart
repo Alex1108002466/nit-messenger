@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../services/auth_service.dart';
 
+import 'verify_code_screen.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -44,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    final result = await AuthService.register(
+    final result = await AuthService.requestRegistration(
       name: name,
       username: username,
       email: email,
@@ -54,10 +56,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!mounted) return;
 
     if (result['success']) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Регистрация прошла успешно!')),
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerifyCodeScreen(email: email),
+        ),
       );
-      Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result['error'])),
@@ -71,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(
         title: const Text('Регистрация'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
